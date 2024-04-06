@@ -1,6 +1,10 @@
 # starwars-timeline-tweet
 
-### Running locally with Docker & localstack
+A Lambda that tweets out Star Wars events on [@UltStarWarsTime](https://twitter.com/UltStarWarsTime).
+
+Lambda and DynamoDB deployed via AWS SAM.
+
+## Running locally with Docker & localstack
 
 ref: <https://github.com/ganshan/sam-dynamodb-local>
 
