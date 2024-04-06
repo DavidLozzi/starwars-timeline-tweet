@@ -1,5 +1,51 @@
 # starwars-timeline-tweet
 
+### Running locally with Docker & localstack
+
+ref: <https://github.com/ganshan/sam-dynamodb-local>
+
+Set some dummy variables.
+
+```shell
+export AWS_ACCESS_KEY_ID=dummy
+export AWS_SECRET_ACCESS_KEY=dummy
+export AWS_SESSION_TOKEN=dummy
+```
+
+Install docker and localstack
+
+`docker run --rm -it -p 4566:4566 -p 4571:4571 localstack/localstack`
+
+Then deploy resources manually through CLI (check out `pip install aws-sam-cli-local` at some point)
+
+Using AWS CLI, use dynamodb as normal, except for the small `endpoint-url` addition
+
+`aws dynamodb create-table --attribute-definitions AttributeName=id,AttributeType=S --billing-mode PAY_PER_REQUEST --table-name LastTweet --key-schema AttributeName=id,KeyType=HASH  --endpoint-url http://localhost:4566`
+
+List all tables locally
+
+`aws dynamodb list-tables --endpoint-url http://localhost:4566`
+
+Return items from our LastTweet table
+
+`aws dynamodb scan --table-name LastTweet --endpoint-url http://localhost:4566`
+
+Add secrets
+
+`aws secretsmanager create-secret --name sw/timeline/twitter --secret-string '[{"API_KEY":"xxx","API_SECRET":"xxx","ACCESS_TOKEN":"xxx-xxx","TOKEN_SECRET":"xxx"}]' --endpoint-url http://localhost:4566`
+
+View secret
+
+`aws secretsmanager get-secret-value --secret-id sw/timeline/twitter`
+
+Mac might need this to alias an IP to local host.
+
+`sudo ifconfig lo0 alias 172.16.123.1`
+
+then start up api
+
+`sam local start-api`
+
 This project contains source code and supporting files for a serverless application that you can deploy with the AWS Serverless Application Model (AWS SAM) command line interface (CLI). It includes the following files and folders:
 
 - `src` - Code for the application's Lambda function.
@@ -9,7 +55,7 @@ This project contains source code and supporting files for a serverless applicat
 
 Resources for this project are defined in the `template.yaml` file in this project. You can update the template to add AWS resources through the same deployment process that updates your application code.
 
-If you prefer to use an integrated development environment (IDE) to build and test your application, you can use the AWS Toolkit.  
+If you prefer to use an integrated development environment (IDE) to build and test your application, you can use the AWS Toolkit.
 The AWS Toolkit is an open-source plugin for popular IDEs that uses the AWS SAM CLI to build and deploy serverless applications on AWS. The AWS Toolkit also adds step-through debugging for Lambda function code.
 
 To get started, see the following:

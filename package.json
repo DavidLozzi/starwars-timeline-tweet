@@ -1,13 +1,22 @@
 {
-    "name": "replaced-by-user-input",
-    "description": "replaced-by-user-input",
-    "version": "0.0.1",
-    "private": true,
-    "dependencies": {},
-    "devDependencies": {
-        "jest": "^26.6.3"
-    },
-    "scripts": {
-        "test": "jest"
-    }
+  "name": "replaced-by-user-input",
+  "description": "replaced-by-user-input",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.245.0",
+    "aws-sdk": "^2.1289.0",
+    "form-data": "^4.0.0",
+    "got": "^11.8.6",
+    "node-fetch": "^2.6.7",
+    "oauth": "^0.10.0",
+    "oauth-1.0a": "^2.2.6"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3"
+  },
+  "scripts": {
+    "test": "jest",
+    "deploy": "sam build && sam validate && sam deploy --guided"
+  }
 }
