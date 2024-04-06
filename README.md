@@ -46,6 +46,12 @@ then start up api
 
 `sam local start-api`
 
+## Deploying to AWS
+
+Run `npm run deploy`. This will run `sam build && sam validate && sam deploy --guided`
+
+# Template stuff
+
 This project contains source code and supporting files for a serverless application that you can deploy with the AWS Serverless Application Model (AWS SAM) command line interface (CLI). It includes the following files and folders:
 
 - `src` - Code for the application's Lambda function.
