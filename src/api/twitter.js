@@ -35,11 +35,44 @@ const getTwitterAuthHeader = async (requestUrl, method) => {
 
   return authHeader.Authorization;
 };
+const MAX_TWEET_LEN = 280
+const reduceByDelim = (tweet, delim) => {
+  let newTweet = tweet
+  while (Buffer.byteLength(newTweet, 'utf8') > MAX_TWEET_LEN) {
+    const removeMe = newTweet.lastIndexOf(delim)
+    if (removeMe > 0) {
+      newTweet = newTweet.slice(0, removeMe)
+      console.log('reducing', tweet, 'to', newTweet, 'using', delim, 'removed at', removeMe)
+    } else {
+      break
+    }
+  }
+  return newTweet
+}
+
+const trimTweet = (tweet) => {
+  if (Buffer.byteLength(tweet, 'utf8') <= MAX_TWEET_LEN) {
+    return tweet
+  }
+  console.log('trimming by #')
+  let newTweet = reduceByDelim(tweet, '#')
+  if (Buffer.byteLength(newTweet, 'utf8') <= MAX_TWEET_LEN) {
+    return newTweet
+  }
+  console.log('trimming by space')
+  newTweet = reduceByDelim(tweet, ' ')
+  if (Buffer.byteLength(newTweet, 'utf8') <= MAX_TWEET_LEN) {
+    return newTweet
+  }
+  return tweet.slice(0, MAX_TWEET_LEN)
+}
 
 const sendTweet = async (tweet, convoId, mediaId) => {
-  console.log('tweeting')
+  console.log('tweeting', tweet.length, 'characters')
   try {
-    const payload = { text: tweet }
+    const newTweet = trimTweet(tweet)
+
+    const payload = { text: newTweet }
 
     if (convoId) {
       payload.reply = {
