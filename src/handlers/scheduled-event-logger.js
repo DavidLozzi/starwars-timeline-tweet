@@ -38,16 +38,21 @@ exports.scheduledEventLoggerHandler = async (event, context) => {
         newTweet = tweets[index + 1]
       }
     }
-    console.log('new tweet', newTweet.title)
+    console.log('new tweet')
+    console.log(JSON.stringify(newTweet))
 
     // get image and upload to twitter
     let mediaId = null
     if (newTweet.img) {
-      console.log('getting image')
-      const imgResp = await fetch(newTweet.img)
-      const img = Buffer.from(await imgResp.arrayBuffer())
-      mediaId = await twitterApi.uploadImage(img)
-      console.log('UPLOADED', mediaId)
+      try {
+        console.log('getting image', newTweet.img)
+        const imgResp = await fetch(newTweet.img)
+        const img = Buffer.from(await imgResp.arrayBuffer())
+        mediaId = await twitterApi.uploadImage(img)
+        console.log('UPLOADED', mediaId)
+      } catch (err) {
+        console.error('error uploading image', err)
+      }
     }
 
     // send tweets
